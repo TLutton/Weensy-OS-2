@@ -22,11 +22,18 @@
 #define __PRIORITY__ 1
 #endif
 
+#ifndef __SHARE__
+#define __SHARE__ 2
+#endif
+
 void
 start(void)
 {
 	int i;
+	
 	sys_set_priority(__PRIORITY__);
+	sys_set_share(__SHARE__);
+
 	for (i = 0; i < RUNCOUNT; i++) {
 		// Write characters to the console, yielding after each one.
 		//*cursorpos++ = PRINTCHAR;

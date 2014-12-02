@@ -9,4 +9,6 @@
 
 #define __PRIORITY__ 2
 
+#define __SHARE__ 4
+
 #include "schedos-1.c"

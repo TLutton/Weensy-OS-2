@@ -80,4 +80,23 @@ sys_set_priority(int priority) {
 		    : "cc", "memory");
 }
 
+/*****************************************************************************
+* sys_set_share(share)
+*
+* Sets share of current process with share number 'share'.
+*
+******************************************************************************/
+
+static inline void
+sys_set_share(int share) {
+	// Interrupt number provided in skeleton (INT_SYS_USER2).
+	// pass argument to system call by loading into known register; then
+	// the kernel can look up the register value to read the argument.
+	// Here, the share is read into register %eax.
+	asm volatile("int %0\n"
+		    : : "i" (INT_SYS_USER2),
+			"a" (share)
+		    : "cc", "memory");
+}
+
 #endif
