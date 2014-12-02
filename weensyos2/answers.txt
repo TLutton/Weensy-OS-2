@@ -25,10 +25,13 @@ Average wait time for scheduling_algorithm 1:
 Exercise 4:
 
 Did you complete Exercise 4A, Exercise 4B, or both for extra credit?
-
+4A.
 
 Exercise 5:
-
+The first known timer interrupt occurs while executing process 4.
+I know this to be true because during the fifth round robin cycle, the
+'4' is not printed, signifying a timer interrupt.
+1234 1234 1234 1234 1231 23...etc.
 
 (Exercise 6 is a coding exercise)
 
