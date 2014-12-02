@@ -18,11 +18,15 @@
 #define PRINTCHAR	('1' | 0x0C00)
 #endif
 
+#ifndef __PRIORITY__
+#define __PRIORITY__ 1
+#endif
+
 void
 start(void)
 {
 	int i;
-
+	sys_set_priority(__PRIORITY__);
 	for (i = 0; i < RUNCOUNT; i++) {
 		// Write characters to the console, yielding after each one.
 		*cursorpos++ = PRINTCHAR;

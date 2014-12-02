@@ -7,4 +7,6 @@
 
 #define PRINTCHAR	('2' | 0x0A00)
 
+#define __PRIORITY__ 2
+
 #include "schedos-1.c"

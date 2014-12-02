@@ -99,7 +99,8 @@ start(void)
 
 	// Initialize the scheduling algorithm.
 	//scheduling_algorithm = 0;
-	scheduling_algorithm = 1;
+	//scheduling_algorithm = 1;
+	scheduling_algorithm = 2;
 
 	// Switch to the first process.
 	run(&proc_array[1]);
@@ -152,7 +153,8 @@ interrupt(registers_t *reg)
 		// 'sys_user*' are provided for your convenience, in case you
 		// want to add a system call.
 		/* Your code here (if you want). */
-		run(current);
+		current->p_priority = reg->reg_eax;
+		schedule();
 
 	case INT_SYS_USER2:
 		/* Your code here (if you want). */
@@ -191,7 +193,7 @@ schedule(void)
 {
 	pid_t pid = current->p_pid;
 
-	if (scheduling_algorithm == 0)
+	if (scheduling_algorithm == 0) { // default scheduling
 		while (1) {
 			pid = (pid + 1) % NPROCS;
 
@@ -201,13 +203,33 @@ schedule(void)
 			if (proc_array[pid].p_state == P_RUNNABLE)
 				run(&proc_array[pid]);
 		}
-	else if(scheduling_algorithm == 1) // Exercise 2
-		while(1) 
-			for(pid = 0; pid < NPROCS; pid++) 
+	} else if(scheduling_algorithm == 1) { // Exercise 2
+		while(1) {
+			for(pid = 0; pid < NPROCS; ++pid) {
 				if(proc_array[pid].p_state == P_RUNNABLE)
 					run(&proc_array[pid]);
-			
-		
+			}
+		}
+	} else if(scheduling_algorithm == 2) { // Exercise 4A
+		while(1) {	
+		// highest priority is defined by process with
+		// lowest priority number
+			int most_priority = 100; 
+			int i = 0;
+			for(i = 0; i < NPROCS; ++i) {
+				if(proc_array[i].p_state == P_RUNNABLE
+					&& proc_array[i].p_priority < most_priority)
+						// found new highest priority process
+						most_priority = proc_array[i].p_priority;
+			}
+			while(1) {
+				pid = (pid+1) % NPROCS;
+				if(proc_array[pid].p_state == P_RUNNABLE 
+					&& proc_array[pid].p_priority == most_priority)
+						run(&proc_array[pid]);
+			}
+		}
+	}	
 
 	// If we get here, we are running an unknown scheduling algorithm.
 	cursorpos = console_printf(cursorpos, 0x100, "\nUnknown scheduling algorithm %d\n", scheduling_algorithm);

@@ -61,4 +61,23 @@ sys_exit(int status)
     loop: goto loop; // Convince GCC that function truly does not return.
 }
 
+/*****************************************************************************
+* sys_set_priority(priority)
+* 
+* Sets priority of current process with priority number 'priority'.
+*
+******************************************************************************/
+
+static inline void
+sys_set_priority(int priority) {
+	// Interrupt number provided in skeleton (INT_SYS_USER1).
+	// pass argument to system call by loading into known regiser; then
+	// the kernel can look up the register value to read the argument.
+	// Here, the priority is read into register %eax.
+	asm volatile("int %0\n"
+		    : : "i" (INT_SYS_USER1),
+			"a" (priority)
+		    : "cc", "memory");
+}
+
 #endif
