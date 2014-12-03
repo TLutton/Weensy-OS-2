@@ -15,12 +15,49 @@ Round Robin
 
 Response to Exercise 3:
 
+Per-process turnaround times for scheduling alogirthm 0:
+
+schedos-1: 320*4 - 0 = 1280 ms
+schedos-2: 320*4 - 1 = 1279 ms
+schedos-3: 320*4 - 2 = 1278 ms
+schedos-4: 320*4 - 3 = 1277 ms
+
+Per-process turnaround time for scheduling algorithm 1:
+
+schedos-1: 320 ms
+schedos-2: 320*2 = 640 ms
+schedos-3: 320*3 = 960 ms
+schedos-4: 320*4 = 1280 ms
+
 Average turnaround time for scheduling_algorithm 0:
+
+(1280 + 1279 + 1278 + 1277) / 4 = 1278.5 ms
+
 Average turnaround time for scheduling_algorithm 1:
 
+(320 + 640 + 960 + 1280) / 4 = 800 ms
+
+Per-process wait time for scheduling_algorithm 0:
+
+schedos-1: 0 ms
+schedos-2: 1 ms
+schedos-3: 2 ms
+schedos-4: 3 ms
+
+Per-process wait time for scheduling_algorithm 1:
+
+schedos-1: 0 ms
+schedos-2: 320 ms
+schedos-3: 640 ms
+schedos-4: 960 ms
+
 Average wait time for scheduling_algorithm 0:
+
+(0 + 1 + 2 + 3) / 4 = 1.5 ms
+
 Average wait time for scheduling_algorithm 1:
 
+(0 + 320 + 640 + 960) / 4 = 480 ms
 
 Exercise 4:
 
