@@ -1,18 +1,21 @@
-Name:
+Name: Thomas Lutton
 UCLA ID:
 
-Collaborators:
+Collaborators: N/A
 
 -------------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
 Response to Exercise 1:
 
 The name of the scheduling algorithm is:
+
 Round Robin
 
+///////////////////////////////////////////////////////////////////////////////
 (Exercise 2 is a coding exercise)
 
-
+///////////////////////////////////////////////////////////////////////////////
 Response to Exercise 3:
 
 Per-process turnaround times for scheduling alogirthm 0:
@@ -59,22 +62,50 @@ Average wait time for scheduling_algorithm 1:
 
 (0 + 320 + 640 + 960) / 4 = 480 ms
 
+///////////////////////////////////////////////////////////////////////////////
 Exercise 4:
 
 Did you complete Exercise 4A, Exercise 4B, or both for extra credit?
-4A.
 
+Both 4A and 4B.
+
+///////////////////////////////////////////////////////////////////////////////
 Exercise 5:
 The first known timer interrupt occurs while executing process 4.
 I know this to be true because during the fifth round robin cycle, the
 '4' is not printed, signifying a timer interrupt.
 1234 1234 1234 1234 1231 23...etc.
 
+///////////////////////////////////////////////////////////////////////////////
 (Exercise 6 is a coding exercise)
 
-
+///////////////////////////////////////////////////////////////////////////////
 Anything else you'd like us to know:
 
+In order to assign priority and share values, I used #define
+statements in schedos-1.c, schedos-2.c, schedos-3.c, and
+schedos-4.c.  __PRIORITY__ and __SHARE__ can be redefined as
+necessary. 
 
+For Exercise 8, I differentiated the two synchronization methods
+by including a #define, __PRINT_METHOD_LOCK__ which is defined as
+default and triggers the usage of the locking method to perform atomic
+prints.  By commenting out or deleting this line in each of schedos-1, 2, etc,
+the alternative option of using a system call to create atomic writes can
+be used. 
 
+I was not fully successful in implementing Exercise 7, so I left some 
+commented code within schedule(). The lottery tickets were going to be
+assigned in a similar method to how I defined priority and share values. That
+functionality works correctly (defining the lottery ticket numbers), but I 
+was not able to properly factor the ticket number into my selection
+of the process to run which resulted in an infinite loop with no running
+processes. Instead, I left an implementation that does not factor in
+ticket counts and instead gives each process the same probability of being
+selected by the RNG. Use scheduling_algorithm 4 to run Exercise 7.  
+
+///////////////////////////////////////////////////////////////////////////////
 Extra credit exercises:
+
+See "Anything else you'd like us to know" paragraphs 2 and 3 regarding
+exercises 8 and 7 respectively. 

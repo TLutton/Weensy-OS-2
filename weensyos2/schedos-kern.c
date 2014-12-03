@@ -65,8 +65,7 @@ start(void)
 
 	// Set up hardware (schedos-x86.c)
 	segments_init();
-	//interrupt_controller_init(0);
-	interrupt_controller_init(1);
+	interrupt_controller_init(0);
 	console_clear();
 
 	// Initialize process descriptors as empty
@@ -154,12 +153,12 @@ interrupt(registers_t *reg)
 	case INT_SYS_USER1: // used by sys_set_priority(priority) (Exercise 4A)
 		// 'sys_user*' are provided for your convenience, in case you
 		// want to add a system call.
-		/* Your code here (if you want). */
+		// set the current process's priority
 		current->p_priority = reg->reg_eax;
 		schedule();
 
 	case INT_SYS_USER2: // used by sys_set_share(share) (Exercise 4B)
-		/* Your code here (if you want). */
+		// set the current process's share and num_times
 		current->p_share = reg->reg_eax;
 		current->p_num_times = 0;
 		schedule();
@@ -172,6 +171,10 @@ interrupt(registers_t *reg)
 	
 	case INT_SYS_ATOMIC_PRINT:
 		*cursorpos++ = (char)reg->reg_eax;
+		schedule();
+
+	case INT_SYS_SET_LOTTERY:
+		current->p_num_tickets = reg->reg_eax;		
 		schedule();
 
 	default:
@@ -213,6 +216,7 @@ schedule(void)
 		}
 	} else if(scheduling_algorithm == 1) { // Exercise 2
 		while(1) {
+			// try to run the process with lowest pid first
 			for(pid = 0; pid < NPROCS; ++pid) {
 				if(proc_array[pid].p_state == P_RUNNABLE)
 					run(&proc_array[pid]);
@@ -231,6 +235,8 @@ schedule(void)
 						most_priority = proc_array[i].p_priority;
 			}
 			while(1) {
+				// pre-increment pid in order to alternate running process
+				// with equal priority values
 				pid = (pid+1) % NPROCS;
 				if(proc_array[pid].p_state == P_RUNNABLE 
 					&& proc_array[pid].p_priority == most_priority)
@@ -240,13 +246,52 @@ schedule(void)
 	} else if(scheduling_algorithm == 3) { // Exercise 4B
 		while(1) {
 			if(proc_array[pid].p_state == P_RUNNABLE) {
+				// run current process if it has not reached its share
 				if(proc_array[pid].p_num_times++ <= proc_array[pid].p_share) {
 					run(&proc_array[pid]);
 				} else
+				// process reached its share, reset p_num_times
 					proc_array[pid].p_num_times = 0;
 					
 			}
+			// increment pid to try to run a different process
 			pid = (pid + 1) % NPROCS;
+		}
+	} else if(scheduling_algorithm == 4) { // Exercise 7 (lottery)
+		while(1) {
+
+			int lottery_ticket_sum = 0;
+			int i = 0, j = 0;
+			unsigned int start, end;
+
+			uint64_t u64 = read_cycle_counter();
+			uint32_t u32 = (uint32_t)(u64 & 0xFFFFFFFF);
+/*					
+			int result = (int)(u32 % lottery_ticket_sum);			
+
+			for(i = 0; i < NPROCS; ++i)
+				if(proc_array[i].p_state == P_RUNNABLE)
+					lottery_ticket_sum += proc_array[i].p_num_tickets;
+			
+			result = (int)(u32 % lottery_ticket_sum);
+			
+			for(i = 0; i < NPROCS; ++i) {
+				if(proc_array[i].p_state == P_RUNNABLE){
+					start = 0;
+					end = 0;
+					for(j = 0; j < i; ++j)
+						if(proc_array[j].p_state == P_RUNNABLE)
+							start += proc_array[j].p_num_tickets;
+					end = start + proc_array[i].p_num_tickets;
+					if(result >= start && result < end)
+						run(&proc_array[i]);
+				}
+			}
+*/
+			pid = (pid_t)(u32 % NPROCS);
+			if(proc_array[pid].p_state == P_RUNNABLE)
+				run(&proc_array[pid]);
+
 		}
 	}	
 

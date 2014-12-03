@@ -117,8 +117,26 @@ sys_atomic_print(int c) {
 		    : : "i" (INT_SYS_ATOMIC_PRINT),
 			"a" (c)
 		    : "cc", "memory");
+}
 
+/*****************************************************************************
+* sys_set_lottery_tickets(n)
+*
+* Sets num_tickets of the current process to 'n'.
+*
+******************************************************************************/
 
+static inline void
+sys_set_lottery_tickets(int n) {
+	// uses new interrupt number (INT_SYS_SET_LOTTERY)
+	// pass argument to system call by loading into known register; then
+	// the kernel can look up the register value to read the argument and
+	// assign it to p_num_tickets. Here, the 'n' is read into
+	// register %eax.
+	asm volatile("int %0\n"
+		    : : "i" (INT_SYS_SET_LOTTERY),
+			"a" (n)
+		    : "cc", "memory");
 }
 
 #endif

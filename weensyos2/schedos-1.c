@@ -26,6 +26,10 @@
 #define __SHARE__ 2
 #endif
 
+#ifndef __LOTTERY_TICKETS__
+#define __LOTTERY_TICKETS__ 4
+#endif
+
 // comment out to enable alternative sync method
 #define __PRINT_METHOD_LOCK__
 
@@ -36,12 +40,13 @@ start(void)
 	
 	sys_set_priority(__PRIORITY__);
 	sys_set_share(__SHARE__);
+	sys_set_lottery_tickets(__LOTTERY_TICKETS__);
 
 	for (i = 0; i < RUNCOUNT; i++) {
 		// Write characters to the console, yielding after each one.
-		//*cursorpos++ = PRINTCHAR;
-		//sys_yield();
+
 		#ifdef __PRINT_METHOD_LOCK__
+
 		while(atomic_swap(&lock, 1) != 0) 
 			continue;
 		*cursorpos++ = PRINTCHAR;
@@ -52,6 +57,7 @@ start(void)
 		sys_atomic_print(PRINTCHAR);
 
 		#endif
+
 		sys_yield();
 	}
 

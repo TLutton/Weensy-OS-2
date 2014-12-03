@@ -11,6 +11,8 @@
 
 #define __SHARE__ 8
 
+#define __LOTTERY_TICKETS__ 4
+
 // comment out to enable alternative sync method
 #define __PRINT_METHOD_LOCK__
 
