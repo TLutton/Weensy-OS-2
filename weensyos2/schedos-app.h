@@ -99,4 +99,26 @@ sys_set_share(int share) {
 		    : "cc", "memory");
 }
 
+/*****************************************************************************
+* sys_atomic_print(c)
+*
+* Allows for atomic printing and thus process sync by moving print to kernel
+* space.
+*
+******************************************************************************/
+
+static inline void
+sys_atomic_print(int c) {
+	// Uses new interrupt number (INT_SYS_ATOMIC_PRINT).
+	// pass argument to system call by loading into known register; then
+	// the kernel can look up the register value to read the argument and
+	// print that value. Here, the 'c' is read into register %eax.
+	asm volatile("int %0\n"
+		    : : "i" (INT_SYS_ATOMIC_PRINT),
+			"a" (c)
+		    : "cc", "memory");
+
+
+}
+
 #endif

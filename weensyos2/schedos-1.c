@@ -26,6 +26,9 @@
 #define __SHARE__ 2
 #endif
 
+// comment out to enable alternative sync method
+#define __PRINT_METHOD_LOCK__
+
 void
 start(void)
 {
@@ -38,10 +41,17 @@ start(void)
 		// Write characters to the console, yielding after each one.
 		//*cursorpos++ = PRINTCHAR;
 		//sys_yield();
+		#ifdef __PRINT_METHOD_LOCK__
 		while(atomic_swap(&lock, 1) != 0) 
 			continue;
 		*cursorpos++ = PRINTCHAR;
 		atomic_swap(&lock, 0);
+		
+		#else
+		
+		sys_atomic_print(PRINTCHAR);
+
+		#endif
 		sys_yield();
 	}
 

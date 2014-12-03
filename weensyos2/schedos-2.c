@@ -11,4 +11,7 @@
 
 #define __SHARE__ 4
 
+// comment out to enable alternative sync method
+#define __PRINT_METHOD_LOCK__
+
 #include "schedos-1.c"
